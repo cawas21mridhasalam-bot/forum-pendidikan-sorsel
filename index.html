@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forum Diskusi Pendidikan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        .star-animation {
+            animation: starPulse 0.6s ease-in-out;
+        }
+        @keyframes starPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+        .star-notification {
+            animation: starNotification 3s ease-in-out forwards;
+        }
+        @keyframes starNotification {
+            0% { 
+                opacity: 0; 
+                transform: translateY(20px) scale(0.8); 
+            }
+            15% { 
+                opacity: 1; 
+                transform: translateY(0) scale(1.1); 
+            }
+            85% { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+            100% { 
+                opacity: 0; 
+                transform: translateY(-20px) scale(0.9); 
+            }
+        }
+        .floating-stars {
+            animation: floatingStars 2s ease-out forwards;
+        }
+        @keyframes floatingStars {
+            0% { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+            100% { 
+                opacity: 0; 
+                transform: translateY(-50px) scale(1.5); 
+            }
+        }
+        .topic-card:hover {
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="h-full bg-gradient-to-br from-blue-50 to-indigo-100 font-sans">
+    <div class="min-h-full">
+        <!-- Header -->
+        <header class="bg-white shadow-lg border-b-4 border-indigo-500">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <div class="flex items-center justify-center space-x-4 mb-2">
+                    <img src="https://iili.io/KvpoTiX.png" alt="Logo Kabupaten Sorong Selatan" class="h-64 w-64 object-contain" onerror="this.style.display='none';">
+                    <h1 class="text-3xl font-bold text-gray-900 text-center">Forum Diskusi Pendidikan Kab. Sorong Selatan</h1>
+                </div>
+                <p class="text-center text-gray-600 mt-2">Platform berbagi pengetahuan dan pengalaman pendidikan di Kabupaten Sorong Selatan</p>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- User Registration -->
+            <div id="userRegistration" class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">Daftar Pengguna</h2>
+                <div class="space-y-4">
+                    <div class="flex gap-4">
+                        <input type="text" id="usernameInput" placeholder="Masukkan nama pengguna Anda" 
+                               class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                               onkeypress="if(event.key==='Enter') registerUser()">
+                        <input type="text" id="schoolInput" placeholder="Asal sekolah/institusi" 
+                               class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                               onkeypress="if(event.key==='Enter') registerUser()">
+                    </div>
+                    <div class="flex justify-end">
+                        <button onclick="registerUser()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                            Daftar
+                        </button>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 mt-2">* Data tersimpan di browser lokal</p>
+            </div>
+
+            <!-- Dashboard Bintang -->
+            <div class="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg shadow-lg p-6 mb-8 text-white">
+                <h2 class="text-2xl font-bold mb-4">⭐ Dashboard Perolehan Bintang</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-bold" id="totalStars">0</div>
+                        <div class="text-sm">Total Bintang</div>
+                    </div>
+                    <div class="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-bold" id="totalPosts">0</div>
+                        <div class="text-sm">Total Postingan</div>
+                    </div>
+                    <div class="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+                        <div class="text-3xl font-bold" id="totalComments">0</div>
+                        <div class="text-sm">Total Komentar</div>
+                    </div>
+                </div>
+                
+                <!-- Top Contributors -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold mb-3">🏆 10 Kontributor Teratas</h3>
+                    <div id="topContributors" class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                        <div class="text-center text-white text-opacity-70 col-span-full">Belum ada kontributor</div>
+                    </div>
+                </div>
+
+                <!-- School Statistics -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold mb-3">🏫 Daftar Sekolah/Institusi Aktif</h3>
+                    <div id="schoolList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+                        <div class="text-center text-white text-opacity-70 col-span-full">Belum ada sekolah terdaftar</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aturan Forum -->
+            <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-r-lg">
+                <h3 class="text-lg font-semibold text-red-800 mb-2">📋 Aturan Forum - Berdiskusi dengan Bijaksana</h3>
+                <div class="text-red-700 space-y-2 text-sm">
+                    <div class="font-medium">🚫 DILARANG:</div>
+                    <ul class="ml-4 space-y-1">
+                        <li>• Konten SARA (Suku, Agama, Ras, Antargolongan)</li>
+                        <li>• Kata-kata kasar, makian, atau menyinggung</li>
+                        <li>• Spam atau postingan berulang yang tidak perlu</li>
+                        <li>• Konten dewasa atau tidak pantas</li>
+                        <li>• Menyebarkan informasi palsu (hoax)</li>
+                        <li>• Promosi produk/jasa tanpa izin</li>
+                    </ul>
+                    <div class="font-medium mt-3">✅ DIANJURKAN:</div>
+                    <ul class="ml-4 space-y-1">
+                        <li>• Gunakan bahasa yang sopan dan santun</li>
+                        <li>• Berikan kontribusi yang bermanfaat</li>
+                        <li>• Hormati pendapat orang lain</li>
+                        <li>• Sertakan sumber jika mengutip informasi</li>
+                        <li>• Bantu sesama dengan memberikan solusi</li>
+                    </ul>
+                    <div class="bg-red-100 p-2 rounded mt-3 text-xs">
+                        <strong>⚠️ Peringatan:</strong> Pelanggaran aturan dapat mengakibatkan pengurangan bintang atau pemblokiran akun.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Petunjuk Memperoleh Bintang -->
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8 rounded-r-lg">
+                <h3 class="text-lg font-semibold text-blue-800 mb-2">💡 Cara Memperoleh Bintang</h3>
+                <ul class="text-blue-700 space-y-1">
+                    <li>• Mendapat super 🔥 dari pengguna lain: <span class="font-semibold">+5 bintang ⭐⭐⭐⭐⭐</span></li>
+                    <li>• Posting diskusi baru: <span class="font-semibold">+3 bintang ⭐⭐⭐</span></li>
+                    <li>• Mendapat jempol 👍 dari pengguna lain: <span class="font-semibold">+2 bintang ⭐⭐</span></li>
+                    <li>• Memberikan komentar: <span class="font-semibold">+1 bintang ⭐</span></li>
+                    <li>• Semakin aktif berdiskusi dan mendapat apresiasi, semakin banyak bintang!</li>
+                </ul>
+            </div>
+
+            <!-- Current User Info -->
+            <div id="currentUserInfo" class="hidden bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span class="text-green-800 font-medium">Masuk sebagai: </span>
+                        <span id="currentUsername" class="font-bold text-green-900"></span>
+                        <span class="text-green-600 text-sm ml-2">•</span>
+                        <span id="currentUserSchool" class="text-green-700 text-sm"></span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-green-700">Bintang Anda: </span>
+                        <span id="userStars" class="bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full font-bold">0 ⭐</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Local Storage Status -->
+            <div id="storageStatus" class="fixed top-4 left-4 z-50">
+                <div class="bg-green-500 text-white px-3 py-1 rounded-full text-xs flex items-center space-x-2">
+                    <div class="w-2 h-2 bg-white rounded-full"></div>
+                    <span>Data Tersimpan Lokal</span>
+                </div>
+            </div>
+
+            <!-- Real-time Notifications Area -->
+            <div id="realtimeNotifications" class="fixed top-20 right-4 z-50 space-y-2 max-w-sm">
+                <!-- Notifications will appear here -->
+            </div>
+
+            <!-- Forum Topics -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div class="topic-card bg-white rounded-lg shadow-md p-6 cursor-pointer border-l-4 border-purple-500" onclick="openTopic('pembelajaran-mendalam')">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">🧠 Pembelajaran Mendalam</h3>
+                    <p class="text-gray-600 text-sm">Diskusi tentang strategi dan metode pembelajaran yang mendalam</p>
+                    <div class="mt-4 text-purple-600 text-sm font-medium">
+                        <span id="posts-pembelajaran-mendalam">0</span> postingan • 
+                        <span id="comments-pembelajaran-mendalam">0</span> komentar
+                    </div>
+                </div>
+
+                <div class="topic-card bg-white rounded-lg shadow-md p-6 cursor-pointer border-l-4 border-red-500" onclick="openTopic('7kaih')">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">🎯 7KAIH</h3>
+                    <p class="text-gray-600 text-sm">Pembahasan tentang 7 Kegiatan Asesmen Integrasi Holistik</p>
+                    <div class="mt-4 text-red-600 text-sm font-medium">
+                        <span id="posts-7kaih">0</span> postingan • 
+                        <span id="comments-7kaih">0</span> komentar
+                    </div>
+                </div>
+
+                <div class="topic-card bg-white rounded-lg shadow-md p-6 cursor-pointer border-l-4 border-green-500" onclick="openTopic('kokurikuler')">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">🏃‍♂️ Kokurikuler</h3>
+                    <p class="text-gray-600 text-sm">Diskusi kegiatan kokurikuler dan pengembangan karakter</p>
+                    <div class="mt-4 text-green-600 text-sm font-medium">
+                        <span id="posts-kokurikuler">0</span> postingan • 
+                        <span id="comments-kokurikuler">0</span> komentar
+                    </div>
+                </div>
+
+                <div class="topic-card bg-white rounded-lg shadow-md p-6 cursor-pointer border-l-4 border-blue-500" onclick="openTopic('kurikulum-satuan-pendidikan')">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">📚 Kurikulum Satuan Pendidikan</h3>
+                    <p class="text-gray-600 text-sm">Pembahasan implementasi kurikulum di satuan pendidikan</p>
+                    <div class="mt-4 text-blue-600 text-sm font-medium">
+                        <span id="posts-kurikulum-satuan-pendidikan">0</span> postingan • 
+                        <span id="comments-kurikulum-satuan-pendidikan">0</span> komentar
+                    </div>
+                </div>
+
+                <div class="topic-card bg-white rounded-lg shadow-md p-6 cursor-pointer border-l-4 border-indigo-500" onclick="openTopic('desain-pembelajaran')">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">🎨 Desain Pembelajaran</h3>
+                    <p class="text-gray-600 text-sm">Berbagi ide dan strategi desain pembelajaran yang efektif</p>
+                    <div class="mt-4 text-indigo-600 text-sm font-medium">
+                        <span id="posts-desain-pembelajaran">0</span> postingan • 
+                        <span id="comments-desain-pembelajaran">0</span> komentar
+                    </div>
+                </div>
+
+                <div class="topic-card bg-white rounded-lg shadow-md p-6 cursor-pointer border-l-4 border-yellow-500" onclick="openTopic('asesmen')">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">📊 Asesmen</h3>
+                    <p class="text-gray-600 text-sm">Diskusi tentang metode dan teknik asesmen pembelajaran</p>
+                    <div class="mt-4 text-yellow-600 text-sm font-medium">
+                        <span id="posts-asesmen">0</span> postingan • 
+                        <span id="comments-asesmen">0</span> komentar
+                    </div>
+                </div>
+
+                <div class="topic-card bg-white rounded-lg shadow-md p-6 cursor-pointer border-l-4 border-pink-500" onclick="openTopic('profil-lulusan')">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">🎓 8 Profil Lulusan</h3>
+                    <p class="text-gray-600 text-sm">Pembahasan 8 profil lulusan dan implementasinya</p>
+                    <div class="mt-4 text-pink-600 text-sm font-medium">
+                        <span id="posts-profil-lulusan">0</span> postingan • 
+                        <span id="comments-profil-lulusan">0</span> komentar
+                    </div>
+                </div>
+
+                <div class="topic-card bg-white rounded-lg shadow-md p-6 cursor-pointer border-l-4 border-cyan-500" onclick="openTopic('pemanfaatan-digital')">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-2">💻 Pemanfaatan Digital</h3>
+                    <p class="text-gray-600 text-sm">Diskusi tentang teknologi digital dalam pembelajaran dan administrasi</p>
+                    <div class="mt-4 text-cyan-600 text-sm font-medium">
+                        <span id="posts-pemanfaatan-digital">0</span> postingan • 
+                        <span id="comments-pemanfaatan-digital">0</span> komentar
+                    </div>
+                </div>
+            </div>
+
+            <!-- Topic Discussion Area -->
+            <div id="topicDiscussion" class="hidden">
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 id="topicTitle" class="text-2xl font-bold text-gray-800"></h2>
+                        <button onclick="closeTopic()" class="text-gray-500 hover:text-gray-700 text-xl">✕</button>
+                    </div>
+
+                    <!-- New Post Form -->
+                    <div id="newPostForm" class="hidden bg-gray-50 rounded-lg p-4 mb-6">
+                        <h3 class="text-lg font-semibold text-gray-800 mb-3">✍️ Buat Postingan Baru</h3>
+                        <input type="text" id="postTitle" placeholder="Judul diskusi..." 
+                               class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-3 focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
+                        <textarea id="postContent" placeholder="Tulis diskusi Anda di sini..." 
+                                  class="w-full px-4 py-2 border border-gray-300 rounded-lg mb-3 h-32 focus:ring-2 focus:ring-indigo-500 focus:border-transparent"></textarea>
+                        
+                        <!-- Image Upload Section -->
+                        <div class="mb-4">
+                            <label for="postImage" class="block text-sm font-medium text-gray-700 mb-2">📷 Tambahkan Gambar (Opsional)</label>
+                            <div class="flex items-center space-x-3">
+                                <input type="file" id="postImage" accept="image/*" 
+                                       class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+                                       onchange="previewImage(this)">
+                                <button type="button" onclick="clearImage()" class="text-red-600 hover:text-red-800 text-sm">
+                                    Hapus
+                                </button>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG, GIF. Maksimal 5MB</p>
+                            
+                            <!-- Image Preview -->
+                            <div id="imagePreview" class="hidden mt-3">
+                                <div class="relative inline-block">
+                                    <img id="previewImg" src="" alt="Preview" class="max-w-xs max-h-48 rounded-lg border border-gray-300">
+                                    <button type="button" onclick="clearImage()" 
+                                            class="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                                        ✕
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-3">
+                            <button onclick="submitPost()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                                Posting (+3 ⭐)
+                            </button>
+                            <button onclick="cancelPost()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                                Batal
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 mb-6">
+                        <button id="newPostBtn" onclick="showNewPostForm()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium transition-colors">
+                            + Buat Postingan Baru
+                        </button>
+                    </div>
+
+                    <!-- Posts List -->
+                    <div id="postsList" class="space-y-6">
+                        <div class="text-center text-gray-500 py-8">
+                            Belum ada postingan. Jadilah yang pertama berdiskusi!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="hidden fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4" onclick="closeImageModal()">
+        <div class="relative max-w-4xl max-h-full">
+            <img id="modalImage" src="" alt="Gambar" class="max-w-full max-h-full rounded-lg">
+            <button onclick="closeImageModal()" class="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-75 transition-colors">
+                ✕
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Data storage - Fully local storage based
+        let users = {};
+        let posts = {};
+        let reactions = {};
+        let currentUser = localStorage.getItem('currentForumUser');
+        let currentTopic = '';
+        
+        // Local data management functions
+        function saveDataLocally() {
+            try {
+                localStorage.setItem('forumUsers', JSON.stringify(users));
+                localStorage.setItem('forumPosts', JSON.stringify(posts));
+                localStorage.setItem('forumReactions', JSON.stringify(reactions));
+                console.log('✅ Data saved to localStorage');
+                updateStorageStatus('success');
+            } catch (error) {
+                console.error('❌ Error saving to localStorage:', error);
+                updateStorageStatus('error');
+            }
+        }
+
+        function loadLocalData() {
+            console.log('📂 Loading local data from localStorage...');
+            try {
+                users = JSON.parse(localStorage.getItem('forumUsers') || '{}');
+                posts = JSON.parse(localStorage.getItem('forumPosts') || '{}');
+                reactions = JSON.parse(localStorage.getItem('forumReactions') || '{}');
+                
+                console.log('📊 Loaded data:', {
+                    users: Object.keys(users).length + ' users',
+                    posts: Object.keys(posts).reduce((sum, topic) => sum + (posts[topic] ? posts[topic].length : 0), 0) + ' posts',
+                    reactions: Object.keys(reactions).length + ' reactions'
+                });
+                updateStorageStatus('success');
+            } catch (error) {
+                console.error('❌ Error loading from localStorage:', error);
+                updateStorageStatus('error');
+            }
+        }
+
+        function updateStorageStatus(status) {
+            const statusDiv = document.getElementById('storageStatus');
+            const statusElement = statusDiv.querySelector('div');
+            
+            if (status === 'success') {
+                statusElement.className = 'bg-green-500 text-white px-3 py-1 rounded-full text-xs flex items-center space-x-2';
+                statusElement.innerHTML = `
+                    <div class="w-2 h-2 bg-white rounded-full"></div>
+                    <span>Data Tersimpan Lokal</span>
+                `;
+            } else if (status === 'error') {
+                statusElement.className = 'bg-red-500 text-white px-3 py-1 rounded-full text-xs flex items-center space-x-2';
+                statusElement.innerHTML = `
+                    <div class="w-2 h-2 bg-white rounded-full animate-bounce"></div>
+                    <span>Error Penyimpanan</span>
+                `;
+            }
+        }
+
+        // Cross-tab sync for localStorage
+        function syncWithOtherTabs() {
+            const savedUsers = localStorage.getItem('forumUsers');
+            const savedPosts = localStorage.getItem('forumPosts');
+            const savedReactions = localStorage.getItem('forumReactions');
+            
+            let hasUpdates = false;
+            
+            if (savedUsers) {
+                const parsedUsers = JSON.parse(savedUsers);
+                if (JSON.stringify(parsedUsers) !== JSON.stringify(users)) {
+                    users = parsedUsers;
+                    hasUpdates = true;
+                }
+            }
+            
+            if (savedPosts) {
+                const parsedPosts = JSON.parse(savedPosts);
+                if (JSON.stringify(parsedPosts) !== JSON.stringify(posts)) {
+                    posts = parsedPosts;
+                    hasUpdates = true;
+                }
+            }
+            
+            if (savedReactions) {
+                const parsedReactions = JSON.parse(savedReactions);
+                if (JSON.stringify(parsedReactions) !== JSON.stringify(reactions)) {
+                    reactions = parsedReactions;
+                    hasUpdates = true;
+                }
+            }
+            
+            return hasUpdates;
+        }
+
+        // Topics configuration
+        const topics = {
+            'pembelajaran-mendalam': '🧠 Pembelajaran Mendalam',
+            '7kaih': '🎯 7KAIH',
+            'kokurikuler': '🏃‍♂️ Kokurikuler',
+            'kurikulum-satuan-pendidikan': '📚 Kurikulum Satuan Pendidikan',
+            'desain-pembelajaran': '🎨 Desain Pembelajaran',
+            'asesmen': '📊 Asesmen',
+            'profil-lulusan': '🎓 8 Profil Lulusan',
+            'pemanfaatan-digital': '💻 Pemanfaatan Digital'
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Forum initializing...');
+            
+            // Load local data first
+            loadLocalData();
+            
+            // Update UI with local data
+            updateDashboard();
+            updateTopicCounts();
+            
+            // Check if user is already registered
+            if (currentUser && users[currentUser]) {
+                showUserInfo();
+                hideRegistration();
+            }
+            
+            // Listen for storage changes from other tabs/windows
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'forumUsers' || e.key === 'forumPosts' || e.key === 'forumReactions') {
+                    console.log('🔄 Detected data change from another tab');
+                    const hasUpdates = syncWithOtherTabs();
+                    
+                    if (hasUpdates) {
+                        showRealtimeNotification('Data diperbarui dari tab lain', 'star', 0);
+                        
+                        // Update UI immediately
+                        updateDashboard();
+                        updateTopicCounts();
+                        if (currentUser && users[currentUser]) {
+                            showUserInfo();
+                        }
+                        if (currentTopic) {
+                            loadPosts(currentTopic);
+                        }
+                    }
+                }
+            });
+            
+            console.log('✅ Forum initialized successfully');
+        });
+
+        // User registration
+        function registerUser() {
+            const username = document.getElementById('usernameInput').value.trim();
+            const school = document.getElementById('schoolInput').value.trim();
+            
+            if (!username) {
+                showMessage('Silakan masukkan nama pengguna!', 'error');
+                return;
+            }
+
+            if (!school) {
+                showMessage('Silakan masukkan asal sekolah/institusi!', 'error');
+                return;
+            }
+
+            // Check if user already registered
+            if (currentUser && users[currentUser]) {
+                showMessage('Anda sudah terdaftar dengan nama: ' + currentUser, 'error');
+                return;
+            }
+
+            // Check if username exists
+            if (users[username]) {
+                showMessage('Nama pengguna sudah digunakan! Silakan pilih nama lain.', 'error');
+                return;
+            }
+
+            // Register user
+            const userIP = 'user_' + Date.now(); // Simplified IP simulation
+            const newUser = {
+                username: username,
+                school: school,
+                stars: 0,
+                posts: 0,
+                comments: 0,
+                ip: userIP,
+                registrationTime: new Date().toISOString()
+            };
+
+            users[username] = newUser;
+            currentUser = username;
+            
+            // Save current user to localStorage
+            localStorage.setItem('currentForumUser', currentUser);
+
+            // Save to local storage
+            saveDataLocally();
+            
+            showMessage('Pendaftaran berhasil! Selamat datang ' + username + '!', 'success');
+
+            showUserInfo();
+            hideRegistration();
+            updateDashboard();
+            
+            // Clear input fields
+            document.getElementById('usernameInput').value = '';
+            document.getElementById('schoolInput').value = '';
+        }
+
+        function showUserInfo() {
+            document.getElementById('currentUserInfo').classList.remove('hidden');
+            document.getElementById('currentUsername').textContent = currentUser;
+            document.getElementById('currentUserSchool').textContent = users[currentUser].school || '';
+            document.getElementById('userStars').textContent = users[currentUser].stars + ' ⭐';
+        }
+
+        function hideRegistration() {
+            document.getElementById('userRegistration').style.display = 'none';
+        }
+
+        // Topic management
+        function openTopic(topicId) {
+            if (!currentUser) {
+                showMessage('Silakan daftar terlebih dahulu untuk mengakses forum!', 'error');
+                return;
+            }
+
+            currentTopic = topicId;
+            document.getElementById('topicTitle').textContent = topics[topicId];
+            document.getElementById('topicDiscussion').classList.remove('hidden');
+            loadPosts(topicId);
+            
+            // Scroll to discussion area
+            document.getElementById('topicDiscussion').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function closeTopic() {
+            document.getElementById('topicDiscussion').classList.add('hidden');
+            document.getElementById('newPostForm').classList.add('hidden');
+            document.getElementById('newPostBtn').classList.remove('hidden');
+            currentTopic = '';
+        }
+
+        // Post management
+        function showNewPostForm() {
+            document.getElementById('newPostForm').classList.remove('hidden');
+            document.getElementById('newPostBtn').classList.add('hidden');
+        }
+
+        function cancelPost() {
+            document.getElementById('newPostForm').classList.add('hidden');
+            document.getElementById('newPostBtn').classList.remove('hidden');
+            document.getElementById('postTitle').value = '';
+            document.getElementById('postContent').value = '';
+            clearImage();
+        }
+
+        // Image functions
+        function previewImage(input) {
+            const file = input.files[0];
+            if (file) {
+                // Check file size (5MB limit)
+                if (file.size > 5 * 1024 * 1024) {
+                    showMessage('Ukuran gambar terlalu besar! Maksimal 5MB.', 'error');
+                    clearImage();
+                    return;
+                }
+
+                // Check file type
+                if (!file.type.startsWith('image/')) {
+                    showMessage('File harus berupa gambar!', 'error');
+                    clearImage();
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function clearImage() {
+            document.getElementById('postImage').value = '';
+            document.getElementById('imagePreview').classList.add('hidden');
+            document.getElementById('previewImg').src = '';
+        }
+
+        async function uploadImage(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    // Convert to base64 data URL for storage
+                    resolve(e.target.result);
+                };
+                reader.onerror = function() {
+                    reject(new Error('Gagal membaca file gambar'));
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Image modal functions
+        function openImageModal(imageUrl) {
+            document.getElementById('modalImage').src = imageUrl;
+            document.getElementById('imageModal').classList.remove('hidden');
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.add('hidden');
+            document.getElementById('modalImage').src = '';
+        }
+
+        async function submitPost() {
+            const title = document.getElementById('postTitle').value.trim();
+            const content = document.getElementById('postContent').value.trim();
+            const imageFile = document.getElementById('postImage').files[0];
+
+            if (!title || !content) {
+                showMessage('Silakan isi judul dan isi postingan!', 'error');
+                return;
+            }
+
+            if (!currentUser) {
+                showMessage('Silakan daftar terlebih dahulu!', 'error');
+                return;
+            }
+
+            // Show loading message
+            showMessage('Sedang memproses postingan...', 'info');
+
+            // Upload image if exists
+            let imageUrl = null;
+            if (imageFile) {
+                try {
+                    imageUrl = await uploadImage(imageFile);
+                } catch (error) {
+                    console.error('Error uploading image:', error);
+                    showMessage('Gagal mengupload gambar, postingan akan dibuat tanpa gambar', 'error');
+                }
+            }
+
+            // Create post
+            if (!posts[currentTopic]) {
+                posts[currentTopic] = [];
+            }
+
+            const post = {
+                id: Date.now(),
+                title: title,
+                content: content,
+                author: currentUser,
+                topic: currentTopic,
+                timestamp: new Date().toLocaleString('id-ID'),
+                imageUrl: imageUrl,
+                comments: []
+            };
+
+            posts[currentTopic].push(post);
+            
+            // Award stars with real-time notification
+            const oldStars = users[currentUser].stars;
+            users[currentUser].stars += 3;
+            users[currentUser].posts += 1;
+
+            // Show real-time notification
+            showRealtimeNotification(`Postingan "${title}" berhasil dibuat!`, 'post', 3);
+            updateStarsRealtime(users[currentUser].stars, oldStars);
+
+            // Save to local storage
+            saveDataLocally();
+            
+            // Update UI
+            cancelPost();
+            loadPosts(currentTopic);
+            updateDashboard();
+            updateTopicCounts();
+            showUserInfo();
+        }
+
+        function loadPosts(topicId) {
+            const postsList = document.getElementById('postsList');
+            const topicPosts = posts[topicId] || [];
+
+            if (topicPosts.length === 0) {
+                postsList.innerHTML = '<div class="text-center text-gray-500 py-8">Belum ada postingan. Jadilah yang pertama berdiskusi!</div>';
+                return;
+            }
+
+            postsList.innerHTML = topicPosts.map(post => {
+                const postReactions = reactions[`post_${post.id}`] || { thumbs: [], supers: [] };
+                const userThumbsUp = postReactions.thumbs.includes(currentUser);
+                const userSuper = postReactions.supers.includes(currentUser);
+                const canReact = post.author !== currentUser;
+                
+                return `
+                <div class="border border-gray-200 rounded-lg p-6">
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="text-lg font-semibold text-gray-800">${post.title}</h3>
+                        <span class="text-sm text-gray-500">${post.timestamp}</span>
+                    </div>
+                    <p class="text-gray-700 mb-4">${post.content}</p>
+                    ${post.imageUrl ? `
+                        <div class="mb-4">
+                            <img src="${post.imageUrl}" alt="Gambar postingan" class="max-w-full h-auto rounded-lg border border-gray-300 cursor-pointer" onclick="openImageModal('${post.imageUrl}')">
+                        </div>
+                    ` : ''}
+                    <div class="flex items-center justify-between text-sm text-gray-600 mb-4">
+                        <div class="flex items-center space-x-4">
+                            <span class="font-medium">👤 ${post.author}</span>
+                            <span class="text-xs text-gray-500">🏫 ${users[post.author]?.school || 'Tidak diketahui'}</span>
+                            <span>${post.comments.length} komentar</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            ${canReact ? `
+                                <button onclick="reactToPost(${post.id}, 'thumbs')" 
+                                        class="flex items-center space-x-1 px-3 py-1 rounded-full transition-colors ${userThumbsUp ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 hover:bg-blue-50 text-gray-600'}">
+                                    <span>👍</span>
+                                    <span class="text-xs">${postReactions.thumbs.length}</span>
+                                </button>
+                                <button onclick="reactToPost(${post.id}, 'supers')" 
+                                        class="flex items-center space-x-1 px-3 py-1 rounded-full transition-colors ${userSuper ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 hover:bg-orange-50 text-gray-600'}">
+                                    <span>🔥</span>
+                                    <span class="text-xs">${postReactions.supers.length}</span>
+                                </button>
+                            ` : `
+                                <div class="flex items-center space-x-2">
+                                    <span class="flex items-center space-x-1 px-3 py-1 bg-gray-100 rounded-full text-gray-600">
+                                        <span>👍</span>
+                                        <span class="text-xs">${postReactions.thumbs.length}</span>
+                                    </span>
+                                    <span class="flex items-center space-x-1 px-3 py-1 bg-gray-100 rounded-full text-gray-600">
+                                        <span>🔥</span>
+                                        <span class="text-xs">${postReactions.supers.length}</span>
+                                    </span>
+                                </div>
+                            `}
+                        </div>
+                    </div>
+                    
+                    <!-- Comments -->
+                    <div class="border-t pt-4">
+                        <div class="space-y-3 mb-4">
+                            ${post.comments.map(comment => `
+                                <div class="bg-gray-50 rounded-lg p-3">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <div class="flex items-center space-x-2">
+                                            <span class="font-medium text-sm text-gray-800">👤 ${comment.author}</span>
+                                            <span class="text-xs text-gray-400">🏫 ${users[comment.author]?.school || 'Tidak diketahui'}</span>
+                                        </div>
+                                        <span class="text-xs text-gray-500">${comment.timestamp}</span>
+                                    </div>
+                                    <p class="text-gray-700 text-sm">${comment.content}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                        
+                        <!-- Add Comment -->
+                        <div class="flex gap-3">
+                            <input type="text" placeholder="Tulis komentar..." 
+                                   class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                   id="comment-${post.id}"
+                                   onkeypress="if(event.key==='Enter') addComment(${post.id})">
+                            <button onclick="addComment(${post.id})" 
+                                    class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                Komentar (+1 ⭐)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function addComment(postId) {
+            const commentInput = document.getElementById(`comment-${postId}`);
+            const content = commentInput.value.trim();
+
+            if (!content) {
+                showMessage('Silakan tulis komentar!', 'error');
+                return;
+            }
+
+            if (!currentUser) {
+                showMessage('Silakan daftar terlebih dahulu!', 'error');
+                return;
+            }
+
+            // Find post
+            const topicPosts = posts[currentTopic];
+            const post = topicPosts.find(p => p.id === postId);
+
+            if (post) {
+                const comment = {
+                    id: Date.now(),
+                    content: content,
+                    author: currentUser,
+                    timestamp: new Date().toLocaleString('id-ID')
+                };
+
+                post.comments.push(comment);
+                
+                // Award stars with real-time notification
+                const oldStars = users[currentUser].stars;
+                users[currentUser].stars += 1;
+                users[currentUser].comments += 1;
+
+                // Show real-time notification
+                showRealtimeNotification(`Komentar berhasil ditambahkan!`, 'comment', 1);
+                updateStarsRealtime(users[currentUser].stars, oldStars);
+
+                // Save to local storage
+                saveDataLocally();
+                
+                // Update UI
+                commentInput.value = '';
+                loadPosts(currentTopic);
+                updateDashboard();
+                updateTopicCounts();
+                showUserInfo();
+            }
+        }
+
+        // Reaction functions
+        function reactToPost(postId, reactionType) {
+            const reactionKey = `post_${postId}`;
+            if (!reactions[reactionKey]) {
+                reactions[reactionKey] = { thumbs: [], supers: [] };
+            }
+
+            const reactionArray = reactions[reactionKey][reactionType];
+            const userIndex = reactionArray.indexOf(currentUser);
+            const isAdding = userIndex === -1;
+
+            if (isAdding) {
+                // Add reaction
+                reactionArray.push(currentUser);
+                
+                // Find post author and award stars
+                const topicPosts = posts[currentTopic];
+                const post = topicPosts.find(p => p.id === postId);
+                if (post && users[post.author]) {
+                    const stars = reactionType === 'thumbs' ? 2 : 5;
+                    const oldStars = users[post.author].stars;
+                    users[post.author].stars += stars;
+                    
+                    // Show real-time notification
+                    const emoji = reactionType === 'thumbs' ? '👍' : '🔥';
+                    const notificationType = reactionType === 'thumbs' ? 'thumbs' : 'reaction';
+                    
+                    showRealtimeNotification(`Anda memberikan ${emoji} kepada ${post.author}`, notificationType, 0);
+                    
+                    setTimeout(() => {
+                        showRealtimeNotification(`${post.author} mendapat ${stars} bintang dari ${emoji} Anda!`, 'star', stars);
+                    }, 500);
+                }
+            } else {
+                // Remove reaction
+                reactionArray.splice(userIndex, 1);
+                
+                // Remove stars from post author
+                const topicPosts = posts[currentTopic];
+                const post = topicPosts.find(p => p.id === postId);
+                if (post && users[post.author]) {
+                    const stars = reactionType === 'thumbs' ? 2 : 5;
+                    users[post.author].stars = Math.max(0, users[post.author].stars - stars);
+                }
+            }
+
+            // Save to local storage
+            saveDataLocally();
+
+            // Update UI
+            loadPosts(currentTopic);
+            updateDashboard();
+            showUserInfo();
+        }
+
+        // Dashboard updates
+        function updateDashboard() {
+            const totalStars = Object.values(users).reduce((sum, user) => sum + user.stars, 0);
+            const totalPosts = Object.values(users).reduce((sum, user) => sum + user.posts, 0);
+            const totalComments = Object.values(users).reduce((sum, user) => sum + user.comments, 0);
+
+            document.getElementById('totalStars').textContent = totalStars;
+            document.getElementById('totalPosts').textContent = totalPosts;
+            document.getElementById('totalComments').textContent = totalComments;
+
+            // Update top contributors
+            const sortedUsers = Object.values(users).sort((a, b) => b.stars - a.stars).slice(0, 10);
+            const topContributors = document.getElementById('topContributors');
+            
+            if (sortedUsers.length === 0) {
+                topContributors.innerHTML = '<div class="text-center text-white text-opacity-70 col-span-full">Belum ada kontributor</div>';
+            } else {
+                topContributors.innerHTML = sortedUsers.map((user, index) => `
+                    <div class="flex items-center justify-between bg-white bg-opacity-20 rounded-lg p-3">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-lg font-bold w-6 text-center">${index + 1}</span>
+                            <span class="text-lg">${index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : index < 6 ? '🏅' : '⭐'}</span>
+                            <div>
+                                <div class="font-medium">${user.username}</div>
+                                <div class="text-xs text-white text-opacity-70">🏫 ${user.school || 'Tidak diketahui'}</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="font-bold">${user.stars} ⭐</div>
+                            <div class="text-xs text-white text-opacity-70">${user.posts}P • ${user.comments}K</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Update school list
+            updateSchoolList();
+        }
+
+        function updateTopicCounts() {
+            Object.keys(topics).forEach(topicId => {
+                const topicPosts = posts[topicId] || [];
+                const postCount = topicPosts.length;
+                const commentCount = topicPosts.reduce((sum, post) => sum + post.comments.length, 0);
+                
+                document.getElementById(`posts-${topicId}`).textContent = postCount;
+                document.getElementById(`comments-${topicId}`).textContent = commentCount;
+            });
+        }
+
+        function updateSchoolList() {
+            const schoolList = document.getElementById('schoolList');
+            const schoolStats = {};
+            
+            // Count users and stats per school
+            Object.values(users).forEach(user => {
+                const school = user.school || 'Tidak diketahui';
+                if (!schoolStats[school]) {
+                    schoolStats[school] = {
+                        name: school,
+                        users: 0,
+                        totalStars: 0,
+                        totalPosts: 0,
+                        totalComments: 0
+                    };
+                }
+                schoolStats[school].users++;
+                schoolStats[school].totalStars += user.stars;
+                schoolStats[school].totalPosts += user.posts;
+                schoolStats[school].totalComments += user.comments;
+            });
+
+            const sortedSchools = Object.values(schoolStats).sort((a, b) => b.totalStars - a.totalStars);
+            
+            if (sortedSchools.length === 0) {
+                schoolList.innerHTML = '<div class="text-center text-white text-opacity-70 col-span-full">Belum ada sekolah terdaftar</div>';
+            } else {
+                schoolList.innerHTML = sortedSchools.map((school, index) => `
+                    <div class="bg-white bg-opacity-20 rounded-lg p-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-sm font-bold">${index + 1}</span>
+                                <span class="text-sm">${index < 3 ? '🏆' : '🏫'}</span>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm font-bold">${school.totalStars} ⭐</div>
+                            </div>
+                        </div>
+                        <div class="text-sm font-medium mb-1">${school.name}</div>
+                        <div class="text-xs text-white text-opacity-70">
+                            ${school.users} pengguna • ${school.totalPosts}P • ${school.totalComments}K
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Real-time notification functions
+        function showRealtimeNotification(message, type = 'star', stars = 0) {
+            const notificationArea = document.getElementById('realtimeNotifications');
+            const notification = document.createElement('div');
+            
+            let bgColor = 'bg-yellow-500';
+            let icon = '⭐';
+            
+            if (type === 'post') {
+                bgColor = 'bg-blue-500';
+                icon = '📝';
+            } else if (type === 'comment') {
+                bgColor = 'bg-green-500';
+                icon = '💬';
+            } else if (type === 'reaction') {
+                bgColor = 'bg-orange-500';
+                icon = '🔥';
+            } else if (type === 'thumbs') {
+                bgColor = 'bg-indigo-500';
+                icon = '👍';
+            }
+            
+            notification.className = `star-notification ${bgColor} text-white px-4 py-3 rounded-lg shadow-lg flex items-center space-x-3`;
+            notification.innerHTML = `
+                <div class="text-2xl">${icon}</div>
+                <div class="flex-1">
+                    <div class="font-medium text-sm">${message}</div>
+                    ${stars > 0 ? `<div class="text-xs opacity-90">+${stars} bintang ⭐</div>` : ''}
+                </div>
+                ${stars > 0 ? `<div class="floating-stars text-2xl">⭐</div>` : ''}
+            `;
+            
+            notificationArea.appendChild(notification);
+            
+            // Remove notification after animation
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 3000);
+        }
+
+        function updateStarsRealtime(newStars, oldStars) {
+            const starElement = document.getElementById('userStars');
+            const difference = newStars - oldStars;
+            
+            // Update the display
+            starElement.textContent = newStars + ' ⭐';
+            
+            // Add animation
+            starElement.classList.add('star-animation');
+            setTimeout(() => {
+                starElement.classList.remove('star-animation');
+            }, 600);
+            
+            // Show floating stars if gained
+            if (difference > 0) {
+                showFloatingStars(starElement, difference);
+            }
+        }
+
+        function showFloatingStars(element, count) {
+            for (let i = 0; i < Math.min(count, 5); i++) {
+                setTimeout(() => {
+                    const floatingStar = document.createElement('div');
+                    floatingStar.className = 'floating-stars fixed text-2xl pointer-events-none z-50';
+                    floatingStar.textContent = '⭐';
+                    
+                    const rect = element.getBoundingClientRect();
+                    floatingStar.style.left = (rect.left + Math.random() * rect.width) + 'px';
+                    floatingStar.style.top = rect.top + 'px';
+                    
+                    document.body.appendChild(floatingStar);
+                    
+                    setTimeout(() => {
+                        if (floatingStar.parentNode) {
+                            floatingStar.remove();
+                        }
+                    }, 2000);
+                }, i * 100);
+            }
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            let bgColor = 'bg-red-500';
+            if (type === 'success') bgColor = 'bg-green-500';
+            if (type === 'info') bgColor = 'bg-blue-500';
+            
+            messageDiv.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 ${bgColor} text-white`;
+            messageDiv.textContent = message;
+            
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 3000);
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9915ad97b398e428',t:'MTc2MDkzMzU1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
